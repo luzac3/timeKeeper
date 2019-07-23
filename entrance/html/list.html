@@ -18,8 +18,13 @@
 
 <div id = "nowTime" class="admin">
     <!-- 現在時間をごまかすツール -->
-    <form><p>時間<input type="text">(4桁)</p></form>
+    <form>
+        <p>時間<input type="time">(4桁)</p>
+        <p><input type="radio" name="chooseTime">入力時刻<input type="radio" name="chooseTime" checked>現在時刻
+    </form>
+    <p><span id="nowTime">00:00</span>　時点での情報
 </div>
+<br>
 
 <div id="list">
 <?php
