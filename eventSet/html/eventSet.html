@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>企画作成</title>
+</head>
+<body>
+<!-- getデータの読み込み -->
+
+<div id="parentEvnt">
+    <p>親イベントタイトル</p>
+    <form><p><input type="text" id="parentEvntCd" disabled="disabled" value="0001"></p></form>
+    <!-- サブイベント表示領域(親イベントから派生させた場合、親イベントのタイトルが入る) -->
+    <!-- サブイベントに登録したユーザは親イベントにも自動的に登録される -->
+    <!-- トリガーを使い、更新を検知。更新された行がサブイベントフラグオンだった場合、イベントコードからユーザを引いて親イベントに存在しなければINSERTする -->
+</div>
+<br>
+<div><form>
+    <p>タイトル:<input type="text" id="title" required></p>
+
+    <div id="joinner">
+        <p class="joinner"><input type="text" id="joinner_01" required></p>
+        <button type="button" value="add">追加</button>
+        <button type="button" value="del">削除</button>
+    </div>
+
+    <div id="equip">
+        <p class="joinner"><input type="text" id="equip_01" required></p>
+        <button type="button" value="add">追加</button>
+        <button type="button" value="del">削除</button>
+    </div>
+
+    <p id="time">■開催時間<input type="time" id="startTime">～<input type="time" id="endTime" required></p>
+    <p id="gatherTime">■参加者集合時間(空欄可)<input type="time" id="gatherTime" required></p>
+
+    <div id="content">
+        <p>■内容■</p>
+        <textarea id="content" required></textarea>
+    </div>
+
+    <p><button type="button" value="register">登録</button></p>
+</form></div>
+</body>
+</html>

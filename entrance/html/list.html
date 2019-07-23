@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="/timeKeeper/common/css/base.css" type="text/css" media="screen">
+<link rel="stylesheet" href="/timeKeeper/common/css/table_conf.css" type="text/css" media="screen">
+<title>企画リスト</title>
+</head>
+<body>
+
+<?php
+    // データの取得
+    $root = $_SERVER["DOCUMENT_ROOT"];
+    require_once($root."/timeKeeper/common/php/stored.php");
+
+    $list = stored("getEvntLst",NULL);
+?>
+
+<div id = "nowTime" class="admin">
+    <!-- 現在時間をごまかすツール -->
+    <form><p>時間<input type="text">(4桁)</p></form>
+</div>
+
+<div id="list">
+<?php
+    forEach($list as $row){
+        echo "<p>";
+        echo $row["STT_HM"];
+        echo "～";
+        echo $row["END_HM"];
+        echo "　";
+        echo "<a href='/timeKeeper/detail/html/detail.html?evnt=".$row["CNTNT_CD"]."'>".$row["TTL"]."</a>";
+        echo "</p>\n";
+    }
+?>
+</div>
+</body>
+</html>

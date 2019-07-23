@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="/timeKeeper/common/css/base.css" type="text/css" media="screen">
+<link rel="stylesheet" href="/timeKeeper/common/css/table_conf.css" type="text/css" media="screen">
+<title>企画詳細</title>
+</head>
+<body>
+
+<!-- GETデータ読み込み -->
+
+<div id="edit" class="admin">
+    <!-- 管理者のみ表示 -->
+    <p>管理者にのみ表示される領域</p>
+    <a href="/timeKeeper/eventSet/html/eventSet.html?cntnt=/">編集</a>
+    <p>
+        <input type="time">分<button type="button">遅延</button>
+   </p>
+</div>
+<br>
+<div>
+    <p id="title">■資料の盆踊り(タイトル)■</p>
+    <p id="status">■状態：参加者集合中■</p>
+
+    <div id="notIn" class="admin">
+        <p>■未集合の参加者*管理者にのみ表示される領域■</p>
+        <!-- 参加していない人のリスト -->
+        <p>アンキロサウルス</p>
+    </div>
+
+    <br>
+
+    <div id="notInEquipment" class="admin">
+        <p>■準備中の機材*管理者にのみ表示される領域■</p>
+        <!-- 用意されていない機材 -->
+        <p>きんのたま</p>
+    </div>
+
+    <br>
+
+    <p id="time">■開催時間　10:00～11:00</p>
+    <p id="gatherTime">■参加者集合時間　9：45～</p>
+
+    <div id="content">
+        <p>■内容■</p>
+        <p>うみゃみゃみゃみゃみんみみゃみゃうみゃみゃ<br>うみゃみゃみゃみみんみみゅみゃうみゃみゃあ<br>うみゃみゃみゃみゃみゃみゃ！
+    </div>
+
+    <br>
+
+    <div id="joinnerUser" class="user">
+        <p>■参加者リスト■</p>
+        <span>げんじんしん</span><br>
+        <span>ドアラ</span><br>
+        <span>ジュリー</span><br>
+        <span>アンキロサウルス</span><br>
+    </div>
+
+    <br>
+
+    <div id="joinnerAdmin" class="admin">
+        <!-- 管理者用の参加者リスト -->
+        <p>■参加者リスト(管理用)■
+        <form>
+            <span><input type="checkbox" name="joinnerList" value="01">げんじんしん</span>
+            <span><input type="checkbox" name="joinnerList" value="02">ドアラ</span>
+            <span><input type="checkbox" name="joinnerList" value="03">ジュリー</span>
+            <span><input type="checkbox" name="joinnerList" value="04">アンキロサウルス</span>
+        </form>
+        <!-- チェックボックス選択都度通信、Ajaxで一部更新　ロード時はオールロード式だがリロードしない限り内部で書き換え -->
+    </div>
+
+    <div id="equipment" class="admin">
+        <p>■準備機材リスト■</p>
+        <form>
+            <p><input type="checkbox" name="equipmentList">きんのたま</p>
+        </form>
+    </div>
+
+</div>
+
+
+
+
+</body>
+</html>
