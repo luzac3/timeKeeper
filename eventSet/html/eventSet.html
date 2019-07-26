@@ -2,43 +2,136 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" href="/timeKeeper/common/css/base.css" type="text/css" media="screen">
+<link rel="stylesheet" href="/timeKeeper/common/css/table_conf.css" type="text/css" media="screen">
+<script type="text/javascript" src="/timeKeeper/eventSet/js/eventSet.js"></script>
 <title>企画作成</title>
 </head>
 <body>
 <!-- getデータの読み込み -->
+<?php
+    // データの取得
+    $root = $_SERVER["DOCUMENT_ROOT"];
+    require_once($root."/timeKeeper/common/php/stored.php");
+
+    if(!empty($_GET["evnt"])){
+        $cntntCd = $_GET["evnt"];
+
+        $arr = [$cntntCd];
+
+    }else{
+        if(!isset($_COOKIE["evnt"])){
+            // 新イベントコード作成/取得
+            $newCntntCd = stored("newEvnt",null)[0];
+            setcookie("evnt",$newCntntCd["CNTNT_CD"]);
+        }
+
+        $cntntCd = $_COOKIE["evnt"];
+
+        $arr = [$cntntCd];
+    }
+
+    $evnt = stored("getEvnt",$arr)[0];
+    print_r($evnt);
+?>
 
 <div id="parentEvnt">
-    <p>親イベントタイトル</p>
-    <form><p><input type="text" id="parentEvntCd" disabled="disabled" value="0001"></p></form>
+<?php
+    echo "line1";
+    if($evnt["PRNT_CNTNT_CD"]){
+        $parentCntntCd = $evnt["PRNT_CNTNT_CD"];
+        // 親イベント取得
+        $arr2 = [$parentCntntCd];
+
+        $parentEvnt = stored("getEvnt",$arr2)[0];
+
+        echo "<p>". $parentEvnt["TTL"] ."</p>\n";
+        echo "<form><p><input type='text' id='parentEvntCd' disabled='disabled' value='".$parentEvnt["CNTNT_CD"]."'></p></form>\n";
+    }
+?>
     <!-- サブイベント表示領域(親イベントから派生させた場合、親イベントのタイトルが入る) -->
     <!-- サブイベントに登録したユーザは親イベントにも自動的に登録される -->
     <!-- トリガーを使い、更新を検知。更新された行がサブイベントフラグオンだった場合、イベントコードからユーザを引いて親イベントに存在しなければINSERTする -->
 </div>
 <br>
-<div><form>
-    <p>タイトル:<input type="text" id="title" required></p>
 
-    <div id="joinner">
-        <p class="joinner"><input type="text" id="joinner_01" required></p>
+<div><form><table>
+<?php
+    echo "<td>タイトル</td><td><input type='text' id = 'title' required value='" . $evnt["TTL"] . "'></td>\n";
+?>
+    <tr id="joinner">
+        <td>参加者</td>
+        <td>
+        <?php
+            $jnnrArr = explode(",",$evnt["JNNR_NM"]);
+            $num = 1;
+            forEach($jnnrArr as $jnnr){
+                echo "<p class='joinner'><input type = 'text' id = 'joinner_".$num++."' value = '". $jnnr ."' required></p>\n";
+            }
+        ?>
         <button type="button" value="add">追加</button>
         <button type="button" value="del">削除</button>
-    </div>
+        </td>
+    </tr>
 
-    <div id="equip">
-        <p class="joinner"><input type="text" id="equip_01" required></p>
-        <button type="button" value="add">追加</button>
-        <button type="button" value="del">削除</button>
-    </div>
+    <tr id="time">
+        <td>
+            開催時間
+        </td>
+        <td>
+        <?php
+            $startHour = explode(":",$evnt["STT_HM"])[0];
+            $startTime = explode(":",$evnt["STT_HM"])[1];
+            $EndHour = explode(":",$evnt["END_HM"])[0];
+            $EndTime = explode(":",$evnt["END_HM"])[1];
 
-    <p id="time">■開催時間<input type="time" id="startTime">～<input type="time" id="endTime" required></p>
-    <p id="gatherTime">■参加者集合時間(空欄可)<input type="time" id="gatherTime" required></p>
+            echo "<input type='number' id='starthour' value='".$startHour."' required>時";
+            echo "<input type='number' id='starttime' value='".$startTime."' required>分\n";
+            echo "～\n";
+            echo "<input type='number' id='endhour' value='".$EndHour."' required>時";
+            echo "<input type='number' id='endtime' value='".$EndTime."' required>分\n";
+        ?>
+        </td>
+    </tr>
+    <tr id="gatherTime">
+        <td>
+            参加者集合時間(空欄可)
+        </td>
+        <td>
+        <?php
+            iF($evnt["GTHR_HM"]){
+                $gthrHour = explode(":",$evnt["GTHR_HM"])[0];
+                $gthrTime = explode(":",$evnt["GTHR_HM"])[1];
+            }else{
+                $gthrHour = "";
+                $gthrTime = "";
+            }
 
-    <div id="content">
-        <p>■内容■</p>
-        <textarea id="content" required></textarea>
-    </div>
+            echo "<input type='number' id='gatherhour' value='".$gthrHour."' required>時";
+            echo "<input type='number' id='gathertime' value='".$gthrTime."' required>分\n";
+        ?>
+        </td>
+    </tr>
 
-    <p><button type="button" value="register">登録</button></p>
-</form></div>
+    <tr id="content">
+        <td>内容</td>
+        <td>
+        <?php
+            echo "<textarea id='content' required>".$evnt["CNTNT"]."</textarea>";
+        ?>
+        </td>
+    </tr>
+
+
+    <tr id="content">
+        <td>備考</td>
+        <td>
+        <?php
+            echo "<textarea id='remarks' required>".$evnt["RMRKS"]."</textarea>";
+        ?>
+        </td>
+    </tr>
+</table></form></div>
+<p><button type="button" value="register">登録</button></p>
 </body>
 </html>

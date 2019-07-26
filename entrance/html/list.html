@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" href="/timeKeeper/common/css/base.css" type="text/css" media="screen">
 <link rel="stylesheet" href="/timeKeeper/common/css/table_conf.css" type="text/css" media="screen">
+<script type="text/javascript" src="/timeKeeper/entrance/js/list.js"></script>
+<script type="text/javascript" src="/timeKeeper/common/js/getServerTime.js"></script>
 <title>企画リスト</title>
 </head>
 <body>
@@ -19,10 +21,10 @@
 <div id = "nowTime" class="admin">
     <!-- 現在時間をごまかすツール -->
     <form>
-        <p>時間<input type="time">(4桁)</p>
-        <p><input type="radio" name="chooseTime">入力時刻<input type="radio" name="chooseTime" checked>現在時刻
+        <p><input type="number" id="userInputHour">時<input type="number" id="userInputTime">分</p>
+        <p><input type="radio" name="chooseTime" value="0">入力時刻<input type="radio" name="chooseTime" value="1" checked>現在時刻
     </form>
-    <p><span id="nowTime">00:00</span>　時点での情報
+    <p><span id="nowTimeShow">00:00</span>　時点での情報
 </div>
 <br>
 
