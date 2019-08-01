@@ -57,16 +57,28 @@
 
 <div><form><table>
 <?php
-    echo "<td>タイトル</td><td><input type='text' id = 'title' required value='" . $evnt["TTL"] . "'></td>\n";
+    echo "<tr><td>企画番号</td><td><input type='number' id='cntntCd' value='".$cntntCd."' disabled></td></tr>\n";
+    echo "<tr><td>タイトル</td><td><input type='text' id = 'title' required value='" . $evnt["TTL"] . "'></td></tr>\n";
 ?>
     <tr id="joinner">
         <td>参加者</td>
         <td>
         <?php
-            $jnnrArr = explode(",",$evnt["JNNR_NM"]);
-            $num = 1;
-            forEach($jnnrArr as $jnnr){
-                echo "<p class='joinner'><input type = 'text' id = 'joinner_".$num++."' value = '". $jnnr ."' required></p>\n";
+            $AllJoinnerList = stored("getUserList",null);
+            $jnnrCdArr = explode(",",$evnt["JNNR_CD"]);
+            $num = 0;
+
+            forEach($jnnrCdArr as $jnnrCd){
+                echo "<p id = 'joinner_".$num."' class='joinner'><select>";
+                echo "<option value=''>----------\n";
+                forEach($AllJoinnerList as $AllJoinner){
+                    if($AllJoinner["JNNR_CD"] == $jnnrCd){
+                        echo "<option value='".$AllJoinner["JNNR_CD"]."' 'selected'>".$AllJoinner["JNNR_NM"]."\n";
+                    }
+                    echo "<option value='".$AllJoinner["JNNR_CD"]."'>".$AllJoinner["JNNR_NM"]."\n";
+                }
+                echo "</select></p>";
+                $num++;
             }
         ?>
         <button type="button" value="add">追加</button>
