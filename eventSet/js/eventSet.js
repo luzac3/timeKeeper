@@ -60,10 +60,13 @@ window.onload=function(){
                 ]
             }
 
+            let parentEvntCd = document.getElementById("parentEvntCd").value;
+
             argArr = {
                 tableNameCntnt:"T_CNTNT"
                 ,sqlCntnt:[
                     cntntArr["cntntCd"]
+                    ,parentEvntCd
                     ,cntntArr["title"]
                     ,cntntArr["starthour"]
                     ,cntntArr["starttime"]
