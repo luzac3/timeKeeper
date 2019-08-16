@@ -46,71 +46,48 @@ window.onload=function(){
                 cntntArr[nodeList[i].id] = nodeList[i].value;
             }
 
-            sql1 = "INSERT INTO T_CNTNT VALUES(";
-
-            sql1 += "'"
-            sql1 += cntntArr["cntntCd"];
-            sql1 += "','";
-            sql1 += cntntArr["title"];
-            sql1 += "','";
-            sql1 += cntntArr["starthour"];
-            sql1 += ":";
-            sql1 += cntntArr["starttime"];
-            sql1 += "','";
-            sql1 += cntntArr["endhour"];
-            sql1 += ":";
-            sql1 += cntntArr["endtime"];
-            sql1 += "','";
-            sql1 += cntntArr["gatherhour"];
-            sql1 += ":";
-            sql1 += cntntArr["gathertime"];
-            sql1 += "','";
-            sql1 += cntntArr["content"];
-            sql1 += "','";
-            sql1 += cntntArr["remarks"];
-            sql1 += "')";
-
             let joinnerNodeList = document.getElementsByClassName("joinner");
-
-            let sqlJoinner = "INSERT INTO T_CNTNT_JNNR VALUES('";
 
             len = joinnerNodeList.length;
 
+            sqlJoinnerArr = [];
+
             for(let i=0; i < len; i++){
-                // 0埋めユーザーコード
-                sqlJoinner += cntnt["cntntCd"];
-                sqlJoinner += "','";
-                sqlJoinner += joinnerNodeList[i].value;
-                sqlJoinner += "',NULL";
-                sqlJoinner += "),";
+                sqlJoinnerArr[i]=[
+                  cntnt["cntntCd"]
+                  ,joinnerNodeList[i].value
+                  ,"null"
+                ]
             }
 
-            sqlJoinner.slice(-1);
-
-            let argArr1 = {
-                sql:sql1
+            argArr = {
+                tableNameCntnt:"T_CNTNT"
+                ,sqlCntnt:[
+                    cntntArr["cntntCd"]
+                    ,cntntArr["title"]
+                    ,cntntArr["starthour"]
+                    ,cntntArr["starttime"]
+                    ,cntntArr["endhour"]
+                    ,cntntArr["endtime"]
+                    ,cntntArr["gatherhour"]
+                    ,cntntArr["gathertime"]
+                    ,cntntArr["content"]
+                    ,cntntArr["remarks"]
+                ]
+                ,tableNameJoinner:"T_CNTNT_JNNR"
+                ,sqlJoinner:sqlJoinnerArr
+                ,cntntCd:cntntArr["cntntCd"]
             };
 
-            let argArr2 = {
-                sql:sqlJoinner
-            };
+            defaultAjax("/timeKeeper/eventSet/php/register.php",argArr).then(function(data){
+              // ページ繊維
+              alert("OK");
+            });
 
+            // registerで実装
             let deleteArr = {
                 sql:"DELETE FROM T_CNTNT_JNNR WHERE CNTNT_CD = '"+cntnt["cntntCd"]+"'"
             }
-
-           defaultAjax("/timeKeeper/eventSet/php/noneStoredSql.php",argArr1).then(function(data){
-               if(data){
-                   defaultAjax("/timeKeeper/eventSet/php/noneStoredSql.php",deleteArr).then(function(data){
-                       if(data){
-                           defailtAjax("/timeKeeper/eventSet/php/noneStoredSql.php",argArr2).then(function(data){
-                               // ページ繊維
-                               alert("OK");
-                           });
-                       }
-                   });
-               }
-           });
         }
     });
 }
