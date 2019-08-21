@@ -1,36 +1,36 @@
 DROP PROCEDURE IF EXISTS getEvnt;
 DELIMITER //
 -- ********************************************************************************************
--- getEvnt ƒCƒxƒ“ƒg‚ðŽæ“¾‚·‚é
+-- getEvnt ã‚¤ãƒ™ãƒ³ãƒˆã‚’å–å¾—ã™ã‚‹
 --
--- yˆ—ŠT—vz
---  ƒR[ƒh‚É‚æ‚èƒCƒxƒ“ƒg‚ðŽæ“¾‚·‚é
---
---
--- yŒÄ‚Ño‚µŒ³‰æ–Êz
---   ƒŠƒXƒg
---
--- yˆø”z
---      input_cntnt_cd     : ƒRƒ“ƒeƒ“ƒcƒR[ƒh
+-- ã€å‡¦ç†æ¦‚è¦ã€‘
+--  ã‚³ãƒ¼ãƒ‰ã«ã‚ˆã‚Šã‚¤ãƒ™ãƒ³ãƒˆã‚’å–å¾—ã™ã‚‹
 --
 --
--- y–ß‚è’lz
+-- ã€å‘¼ã³å‡ºã—å…ƒç”»é¢ã€‘
+--   ãƒªã‚¹ãƒˆ
+--
+-- ã€å¼•æ•°ã€‘
+--      input_cntnt_cd     : ã‚³ãƒ³ãƒ†ãƒ³ãƒ„ã‚³ãƒ¼ãƒ‰
+--
+--
+-- ã€æˆ»ã‚Šå€¤ã€‘
 --      exit_cd            : exit_cd
---      ³íF0
---      ˆÙíF99
+--      æ­£å¸¸ï¼š0
+--      ç•°å¸¸ï¼š99
 -- --------------------------------------------------------------------------------------------
--- yXV—š—ðz
---  2019.7.23 ‘å™@V‹Kì¬
+-- ã€æ›´æ–°å±¥æ­´ã€‘
+--  2019.7.23 å¤§æ‰ã€€æ–°è¦ä½œæˆ
 -- ********************************************************************************************
 CREATE PROCEDURE `getEvnt`(
     IN `input_cntnt_cd` CHAR(4)
     , OUT `exit_cd` INTEGER
 )
-COMMENT 'ƒCƒxƒ“ƒgƒŠƒXƒgŽæ“¾'
+COMMENT 'ã‚¤ãƒ™ãƒ³ãƒˆãƒªã‚¹ãƒˆå–å¾—'
 
 BEGIN
 
-    -- ˆÙíI—¹ƒnƒ“ƒhƒ‰
+    -- ç•°å¸¸çµ‚äº†ãƒãƒ³ãƒ‰ãƒ©
     DECLARE EXIT HANDLER FOR SQLEXCEPTION SET exit_cd = 99;
 
     set @query = CONCAT("
@@ -39,6 +39,7 @@ BEGIN
             ,TC.PRNT_CNTNT_CD AS PRNT_CNTNT_CD
             ,TC.TTL AS TTL
             ,TC.STTS_CD AS STTS_CD
+            ,GROUP_CONCAT(TJ.JNNR_NM) AS JNNR_NM_LIST
             ,CSC.STTS AS STTS
             ,TC.STT_TM AS STT_TM
             ,DATE_FORMAT(TC.STT_TM, '%H:%i') as STT_HM
@@ -89,7 +90,7 @@ BEGIN
 
     SET @query_text = @query;
 
-        -- ŽÀs
+        -- å®Ÿè¡Œ
     PREPARE main_query FROM @query_text;
     EXECUTE main_query;
     DEALLOCATE PREPARE main_query;

@@ -1,15 +1,15 @@
 <?php
-header('Content-Type: text/html; charset=UTF-8');
+header('Content-Type: text/html; charset=utf8mb4');
 function insertMaker($argArr){
   $root = $_SERVER["DOCUMENT_ROOT"];
 
-  require_once $root . '/anc/common/php/stored.php';
-  require_once $root . '/anc/common/php/conection.php';
+  require_once $root . '/timeKeeper/common/php/stored.php';
+  require_once $root . '/timeKeeper/common/php/conection.php';
 
       $tableName = $argArr["tableName"];
 
       // sqlファイル内容生成
-      $sql = "SET NAMES utf8;";
+      $sql = "SET NAMES utf8mb4;";
 
       $sql .= "INSERT INTO ";
       $sql .= $tableName;
@@ -43,7 +43,7 @@ function insertMaker($argArr){
       $tempFile = "temp_" . $time . ".sql";
 
       // sqlファイル生成場所
-      $sqlFileDir = $root . "anc/sql/";
+      $sqlFileDir = $root . "timeKeeper/sql/";
 
       // sqlファイル生成
       file_put_contents($sqlFileDir.$tempFile, $sql);
@@ -62,9 +62,9 @@ function insertMaker($argArr){
       $output = shell_exec("sh " . $root . "timeKeeper/common/sh/kickSql.sh " .$sqlFileDir.$tempFile. " " .$username. " " .$server. " " .$password. " " .$db_name);
 
       // ファイルの削除
-      unlink($sqlFileDir.$tempFile);
+      // unlink($sqlFileDir.$tempFile);
 
 
-      return $output;
+      return $ret;
 }
 ?>

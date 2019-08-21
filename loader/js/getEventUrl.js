@@ -71,12 +71,22 @@ function getJoinnerList(){
     // 不参加リスト
     nonParticipateArr = setJoinList(nonParticipateList,nonParticipateListLen,"3","3");
 
-
     let wholeArr = joinnerArr.concat(interestArr).concat(nonParticipateArr);
 
     console.log(wholeArr);
 
     // 削除処理後、insertMakerに引き渡すPHPregister処理
+    defaultAjax(
+      {
+        sql:wholeArr
+        ,tableName:"T_JNNR"
+      }
+      ,"/timeKeeper/loader/php/register.php"
+    ).then(function(data){
+        alert("抽出完了");
+    },function(){
+
+    })
 
 }
 
@@ -85,8 +95,12 @@ function setJoinList(list,listLen,status,userStatus){
 
   let commentList = document.getElementById("comment_list").getElementsByClassName("status-body2");
   let commentListLen = commentList.length;
+
+  let num = 0;
+
   for(let i=0; i<listLen; i++){
       let joinnerInfo = new JoinnerInfo();
+      joinnerInfo.cd = count().toString().padStart(4,"0");
       joinnerInfo.name = list[i].text;
       joinnerInfo.tid = list[i].title;
       joinnerInfo.status = status;
@@ -98,12 +112,21 @@ function setJoinList(list,listLen,status,userStatus){
                 joinnerInfo.comment += "\n";
             }
       }
+      joinnerInfo.comment = joinnerInfo.comment.trim();
       resultArr[i] = joinnerInfo;
   }
   return resultArr;
 }
 
+let count = (function(){
+    let num = 0;
+    return function(){
+      return num++;
+    };
+})();
+
 let JoinnerInfo = function(){
+    this.cd = "";
     this.name = "";
     this.tid = "";
     this.status = "";

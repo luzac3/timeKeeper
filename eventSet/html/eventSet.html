@@ -21,7 +21,6 @@
     }
 
     $evnt = stored("getEvnt",$arr)[0];
-    print_r($evnt);
 ?>
 <!DOCTYPE html>
 <html>
@@ -37,7 +36,6 @@
 <body>
 <div id="parentEvnt">
 <?php
-    echo "line1";
     if($evnt["PRNT_CNTNT_CD"]){
         $parentCntntCd = $evnt["PRNT_CNTNT_CD"];
         // 親イベント取得
@@ -67,21 +65,23 @@
         <td>
         <?php
             $AllJoinnerList = stored("getUserList",null);
-            $jnnrCdArr = explode(",",$evnt["JNNR_CD"]);
+            $jnnrCdArr = explode(",",$evnt["JNNR_CD_LIST"]);
             $num = 0;
 
-            forEach($jnnrCdArr as $jnnrCd){
-                echo "<p id = 'joinner_".$num."' class='joinner'><select>";
-                echo "<option value=''>----------\n";
+            echo "<p id = 'joinner_".$num."' class='joinner'><select>";
+            echo "<option value=''>----------\n";
+
+            if(!empty($AllJoinnerList)){
                 forEach($AllJoinnerList as $AllJoinner){
-                    if($AllJoinner["JNNR_CD"] == $jnnrCd){
+                    if(in_array($AllJoinner["JNNR_CD"],$jnnrCdArr)){
+                        $jnnrCdArr = array_diff($jnnrCdArr, array($AllJoinner["JNNR_CD"]));
                         echo "<option value='".$AllJoinner["JNNR_CD"]."' 'selected'>".$AllJoinner["JNNR_NM"]."\n";
                     }
                     echo "<option value='".$AllJoinner["JNNR_CD"]."'>".$AllJoinner["JNNR_NM"]."\n";
                 }
-                echo "</select></p>";
                 $num++;
             }
+            echo "</select></p>";
         ?>
         <button type="button" value="add">追加</button>
         <button type="button" value="del">削除</button>

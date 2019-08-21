@@ -1,39 +1,39 @@
 DROP PROCEDURE IF EXISTS newEvnt;
 DELIMITER //
 -- ********************************************************************************************
--- newEvnt �V�K�C�x���g�R�[�h���쐬����
+-- newEvnt 新規イベントコードを作成する
 --
--- �y�����T�v�z
---  �V�K�̃C�x���g���쐬����
---
---
--- �y�Ăяo������ʁz
---   ���X�g
---
--- �y�����z
---      �Ȃ�
+-- 【処理概要】
+--  新規のイベントを作成する
 --
 --
--- �y�߂�l�z
+-- 【呼び出し元画面】
+--   リスト
+--
+-- 【引数】
+--      なし
+--
+--
+-- 【戻り値】
 --      exit_cd            : exit_cd
---      ����F0
---      �ُ�F99
+--      正常：0
+--      異常：99
 -- --------------------------------------------------------------------------------------------
--- �y�X�V�����z
---  2019.7.25 �吙�@�V�K�쐬
+-- 【更新履歴】
+--  2019.7.25 大杉　新規作成
 -- ********************************************************************************************
 CREATE PROCEDURE `newEvnt`(
     OUT `exit_cd` INTEGER
 )
-COMMENT '�V�C�x���g�쐬'
+COMMENT '新イベント作成'
 
 BEGIN
 
-    -- �ُ�I���n���h��
+    -- 異常終了ハンドラ
     DECLARE EXIT HANDLER FOR SQLEXCEPTION SET exit_cd = 99;
 
     SELECT
-        LPAD(MAX(CAST(CNTNT_CD AS SIGNED)) + 1 ,4 ,0) INTO @NEW_CNTNT_CD
+        LPAD(IFNULL(MAX(CAST(CNTNT_CD AS SIGNED)) + 1,0) ,4 ,0) INTO @NEW_CNTNT_CD
     FROM
         T_CNTNT
     ;
@@ -64,7 +64,7 @@ BEGIN
 
     SET @query_text = @query;
 
-        -- ���s
+        -- 実行
     PREPARE main_query FROM @query_text;
     EXECUTE main_query;
     DEALLOCATE PREPARE main_query;

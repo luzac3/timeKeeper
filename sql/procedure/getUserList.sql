@@ -1,35 +1,35 @@
 DROP PROCEDURE IF EXISTS getUserList;
 DELIMITER //
 -- ********************************************************************************************
--- getUserList ���ׂẴ��[�U�[���擾����
+-- getUserList すべてのユーザーを取得する
 --
--- �y�����T�v�z
---  ���ׂẴ��[�U�[���擾����
---
---
--- �y�Ăяo������ʁz
---   ���X�g
---
--- �y�����z
---      �Ȃ�
+-- 【処理概要】
+--  すべてのユーザーを取得する
 --
 --
--- �y�߂�l�z
+-- 【呼び出し元画面】
+--   リスト
+--
+-- 【引数】
+--      なし
+--
+--
+-- 【戻り値】
 --      exit_cd            : exit_cd
---      ����F0
---      �ُ�F99
+--      正常：0
+--      異常：99
 -- --------------------------------------------------------------------------------------------
--- �y�X�V�����z
---  2019.7.30 �吙�@�V�K�쐬
+-- 【更新履歴】
+--  2019.7.30 大杉　新規作成
 -- ********************************************************************************************
 CREATE PROCEDURE `getUserList`(
     OUT `exit_cd` INTEGER
 )
-COMMENT '�C�x���g���X�g�擾'
+COMMENT 'イベントリスト取得'
 
 BEGIN
 
-    -- �ُ�I���n���h��
+    -- 異常終了ハンドラ
     DECLARE EXIT HANDLER FOR SQLEXCEPTION SET exit_cd = 99;
 
     set @query = CONCAT("
@@ -38,12 +38,16 @@ BEGIN
             ,JNNR_NM
         FROM
             T_JNNR
+        WHERE
+            JN_CD = '1'
+        ORDER BY
+              JNNR_CD ASC
         ;
         ");
 
     SET @query_text = @query;
 
-        -- ���s
+        -- 実行
     PREPARE main_query FROM @query_text;
     EXECUTE main_query;
     DEALLOCATE PREPARE main_query;
