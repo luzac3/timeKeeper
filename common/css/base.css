@@ -19,6 +19,11 @@ body {
 	margin-left:5%;
 	margin-right:5%;
 }
+
+.inline-block{
+	display:inline-block;
+}
+
 h1{
 	color:#FFFFBB;
 	text-align: center;
@@ -127,5 +132,3 @@ h1{
 		width:60%;
 	}
 }
-
-

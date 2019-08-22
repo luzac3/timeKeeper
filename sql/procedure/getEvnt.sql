@@ -39,7 +39,7 @@ BEGIN
             ,TC.PRNT_CNTNT_CD AS PRNT_CNTNT_CD
             ,TC.TTL AS TTL
             ,TC.STTS_CD AS STTS_CD
-            ,GROUP_CONCAT(TJ.JNNR_NM) AS JNNR_NM_LIST
+            ,GROUP_CONCAT(TJ.JNNR_CD) AS JNNR_CD_LIST
             ,CSC.STTS AS STTS
             ,TC.STT_TM AS STT_TM
             ,DATE_FORMAT(TC.STT_TM, '%H:%i') as STT_HM
@@ -50,7 +50,6 @@ BEGIN
             ,DATE_FORMAT(TC.GTHR_TM, '%H:%i') as GTHR_HM
             ,TC.CNTNT AS CNTNT
             ,TC.RMRKS AS RMRKS
-            ,GROUP_CONCAT(TCJ.JNNR_CD) AS JNNR_CD
             ,TCJ.GTHR_FLG AS GTHR_FLG
             ,GROUP_CONCAT(TJ.JNNR_NM) AS JNNR_NM
         FROM

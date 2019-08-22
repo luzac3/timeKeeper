@@ -1,36 +1,39 @@
 <?php
+    header('Content-Type: text/html; charset=utf8mb4');
     // データの取得
     $root = $_SERVER["DOCUMENT_ROOT"];
     require_once($root."/timeKeeper/common/php/stored.php");
 
     if(!empty($_GET["evnt"])){
         $cntntCd = $_GET["evnt"];
-
-        $arr = [$cntntCd];
-
     }else{
         if(!isset($_COOKIE["evnt"])){
             // 新イベントコード作成/取得
             $newCntntCd = stored("newEvnt",null)[0];
             setcookie("evnt",$newCntntCd["CNTNT_CD"]);
+            $cntntCd = $newCntntCd["CNTNT_CD"];
+        }else{
+            $cntntCd = $_COOKIE["evnt"];
         }
-
-        $cntntCd = $_COOKIE["evnt"];
-
-        $arr = [$cntntCd];
     }
 
-    $evnt = stored("getEvnt",$arr)[0];
+    $evnt = stored("getEvnt",[$cntntCd])[0];
+
+    $evntMstr = stored("getEvntMstr",[$cntntCd])[0];
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
 <link rel="stylesheet" href="/timeKeeper/common/css/base.css" type="text/css" media="screen">
 <link rel="stylesheet" href="/timeKeeper/common/css/table_conf.css" type="text/css" media="screen">
+<link rel="stylesheet" href="/timeKeeper/eventSet/css/eventSet.css" type="text/css" media="screen">
 <script type="text/javascript" src="/timeKeeper/eventSet/js/eventSet.js"></script>
+<script type="text/javascript" src="/timeKeeper/common/js/defaultAjax.js"></script>
+<script type="text/javascript" src="/timeKeeper/common/js/elemEventSetter.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <title>企画作成</title>
 </head>
 <body>
@@ -46,7 +49,7 @@
         echo "<p>". $parentEvnt["TTL"] ."</p>\n";
         echo "<form><p><input type='text' id='parentEvntCd' disabled='disabled' value='".$parentEvnt["CNTNT_CD"]."'></p></form>\n";
     }else{
-        echo "<form><p><input type='text' id='parentEvntCd' disabled='disabled' value=''></p></form>\n";
+        echo "<form><p><input type='text' id='parentEvntCd' disabled='disabled' value='null'></p></form>\n";
     }
 ?>
     <!-- サブイベント表示領域(親イベントから派生させた場合、親イベントのタイトルが入る) -->
@@ -59,6 +62,8 @@
 <?php
     echo "<tr><td>企画番号</td><td><input type='number' id='cntntCd' value='".$cntntCd."' disabled></td></tr>\n";
     echo "<tr><td>タイトル</td><td><input type='text' id = 'title' required value='" . $evnt["TTL"] . "'></td></tr>\n";
+    echo "<tr><td>ステータス</td><td><input type='text' id = 'status' class = 'hidden' value='" . $evnt["STTS_CD"] . "' disabled></td></tr>\n";
+    echo "<tr><td>開催日</td><td><input type='text' id = 'eventDate' class = 'hidden' value='" . $evntMstr["EVNT_DATE"] . "' disabled></td></tr>\n";
 ?>
     <tr id="joinner">
         <td>参加者</td>
@@ -66,25 +71,17 @@
         <?php
             $AllJoinnerList = stored("getUserList",null);
             $jnnrCdArr = explode(",",$evnt["JNNR_CD_LIST"]);
-            $num = 0;
-
-            echo "<p id = 'joinner_".$num."' class='joinner'><select>";
-            echo "<option value=''>----------\n";
 
             if(!empty($AllJoinnerList)){
                 forEach($AllJoinnerList as $AllJoinner){
                     if(in_array($AllJoinner["JNNR_CD"],$jnnrCdArr)){
                         $jnnrCdArr = array_diff($jnnrCdArr, array($AllJoinner["JNNR_CD"]));
-                        echo "<option value='".$AllJoinner["JNNR_CD"]."' 'selected'>".$AllJoinner["JNNR_NM"]."\n";
+                        echo "<label class='userList inline-block'><input type='checkbox' class='userListBox' name='userList' value='".$AllJoinner["JNNR_CD"]."' checked>".str_replace("?","□",$AllJoinner["JNNR_NM"])."</label>\n";
                     }
-                    echo "<option value='".$AllJoinner["JNNR_CD"]."'>".$AllJoinner["JNNR_NM"]."\n";
+                    echo "<label class='userList inline-block'><input type='checkbox' class='userListBox' name='userList' value='".$AllJoinner["JNNR_CD"]."'>".str_replace("?","□",$AllJoinner["JNNR_NM"])."</label>\n";
                 }
-                $num++;
             }
-            echo "</select></p>";
         ?>
-        <button type="button" value="add">追加</button>
-        <button type="button" value="del">削除</button>
         </td>
     </tr>
 

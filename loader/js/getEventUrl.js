@@ -75,6 +75,8 @@ function getJoinnerList(){
 
     console.log(wholeArr);
 
+    // 主催、開催日を取得
+
     // 削除処理後、insertMakerに引き渡すPHPregister処理
     defaultAjax(
       {

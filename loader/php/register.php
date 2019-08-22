@@ -1,5 +1,5 @@
 <?php
-header('Content-Type: text/html; charset=UTF-8');
+header('Content-Type: text/html; charset=utf8mb4');
 $root = $_SERVER["DOCUMENT_ROOT"];
 
 require_once $root . '/timeKeeper/common/php/stored.php';
