@@ -8,17 +8,17 @@
 <script type="text/javascript" src="/timeKeeper/detail/js/checker.js"></script>
 <title>企画詳細</title>
 </head>
-<body>
+<body><div id="main">
 <?php
     $cntntCd = $_GET["evnt"];
     // データの取得
     $root = $_SERVER["DOCUMENT_ROOT"];
     require_once($root."/timeKeeper/common/php/stored.php");
 
-    $arr = [$cntntCd];
+    $evnt = stored("getEvnt",[$cntntCd])[0];
 
-    $evnt = stored("getEvnt",$arr)[0];
-    print_r($evnt);
+    // 未参加のユーザーを取得する処理
+    $cntntJnnrList = stored("getCntntJnnr",$cntntCd)[0];
 ?>
 
 <div id="edit" class="admin">
@@ -28,38 +28,35 @@
         echo "<a href='/timeKeeper/eventSet/html/eventSet.html?evnt=" . $cntntCd . "'>編集</a>";
     ?>
     <p>
-        <input type="time">分<button type="button">遅延</button>
+        <input type="time">分<button type="button">遅延</button><button type="button">前倒</button>
    </p>
 </div>
 <br>
 <div>
     <?php
-        echo "<p id='title'>".$evnt["TTL"]."</p>\n";
+        echo "<h1 id='title'>".$evnt["TTL"]."</h1>\n";
         echo "<p id='status'>状態：".$evnt["STTS"]."</p>\n";
     ?>
     <div id="notIn" class="admin">
         <p>■未集合の参加者*管理者にのみ表示される領域■</p>
         <!-- 参加していない人のリスト -->
-        <p>アンキロサウルス</p>
-    </div>
+        <?php
+        forEach($cntntJnnrList as $cntntJnnr){
+            echo "<span id='".$cntntJnnr["JNNR_CD"]."'>・".$cntntJnnr["JNNR_NM"]."</span><br>\n";
+        }
+        ?>
 
-    <br>
-
-    <div id="notInEquipment" class="admin">
-        <p>■準備中の機材*管理者にのみ表示される領域■</p>
-        <!-- 用意されていない機材 -->
-        <p>きんのたま</p>
     </div>
 
     <br>
 
     <?php
-        echo "<p id='time'>開催時間　".$evnt["STT_HM"]."～".$evnt["END_HM"]."</p>\n";
-        echo "<p id='gatherTime'>参加者集合時間　".$evnt["GTHR_HM"]."</p>\n";
+        echo "<p id='time'>■開催時間　".$evnt["STT_HM"]."～".$evnt["END_HM"]."</p>\n";
+        echo "<p id='gatherTime'>■参加者集合時間　".$evnt["GTHR_HM"]."</p>\n";
 
 
         echo "<div id='content'>\n";
-        echo "<p>内容</p>\n";
+        echo "<p>■内容■</p>\n";
         echo "<p>".$evnt["CNTNT"]."</p>\n";
         echo "</div>\n";
     ?>
@@ -67,29 +64,29 @@
     <br>
 
     <?php
+        $joinnerCdList = explode(",",$evnt["JNNR_CD"]);
+        $joinnerNmList = explode(",",$evnt["JNNR_NM"]);
+        $num = 0;
+
         echo "<div id='joinnerUser' class='user'>\n";
-        echo "<p>参加者リスト</p>\n";
-        echo "<span>".$evnt["JNNR_NM"]."</span><br>	\n";
+        echo "<p>■参加者リスト■</p>\n";
+        forEach($joinnerNmList as $joinnerNm){
+            echo "<span>・".$joinnerNm."</span><br>	\n";
+        }
         echo "</div>\n";
 
         // 管理者用の参加者リスト
         echo "<div id='joinnerAdmin' class='admin'>\n";
-        echo "<p>参加者リスト(管理用)</p>\n";
+        echo "<p>■参加者リスト(管理用)■</p>\n";
         echo "<form>\n";
-        echo "<span><input type='checkbox' name='joinnerList' value='" . $evnt["JNNR_CD"] . "'>".$evnt["JNNR_NM"]."</span><br>\n";
+        forEach($joinnerNmList as $joinnerNm){
+            echo "<span><input type='checkbox' name='joinnerList' value='" . $joinnerCdList[$num++] . "'>".$joinnerNm."</span><br>	\n";
+        }
         echo "</form>\n";
         echo "</div>\n";
     ?>
         <!-- チェックボックス選択都度通信、Ajaxで一部更新　ロード時はオールロード式だがリロードしない限り内部で書き換え -->
-    <br>
-
-    <div id="equipment" class="admin">
-        <p>■準備機材リスト■</p>
-        <form>
-            <p><input type="checkbox" name="equipmentList">きんのたま</p>
-        </form>
-    </div>
 </div>
 
-</body>
+</div></body>
 </html>
