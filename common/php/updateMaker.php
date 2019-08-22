@@ -62,7 +62,8 @@ function updateMaker($argArr){
       $output = shell_exec("sh " . $root . "timeKeeper/common/sh/kickSql.sh " .$sqlFileDir.$tempFile. " " .$username. " " .$server. " " .$password. " " .$db_name);
 
       // ファイルの削除
-      // unlink($sqlFileDir.$tempFile);
+      unlink($sqlFileDir.$tempFile);
+      
       return $ret;
 }
 ?>
