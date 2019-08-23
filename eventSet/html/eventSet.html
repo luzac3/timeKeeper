@@ -17,6 +17,12 @@
         }
     }
 
+    if(isset($_COOKIE["admin"])){
+        // 管理者権限の確認
+        $twitterId = $_COOKIE["twitterId"];
+        $admin = $_COOKIE["admin"];
+    }
+
     $evnt = stored("getEvnt",[$cntntCd])[0];
 
     $evntMstr = stored("getEvntMstr",[$cntntCd])[0];
@@ -36,7 +42,9 @@
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <title>企画作成</title>
 </head>
-<body>
+<body><div id="main">
+<p><a href="/timeKeeper/entrance/html/login.html">管理者ログイン</a></p>
+
 <div id="parentEvnt">
 <?php
     if($evnt["PRNT_CNTNT_CD"]){
@@ -144,5 +152,5 @@
     </tr>
 </table></form></div>
 <p><button type="button" value="register">登録</button></p>
-</body>
+</div></body>
 </html>

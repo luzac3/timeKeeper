@@ -63,8 +63,10 @@ window.onload=function(){
             };
 
             defaultAjax(argArr,"/timeKeeper/eventSet/php/register.php").then(function(data){
-              // ページ繊維
-              alert("OK");
+                // ページ繊維
+                location.href("/timeKeeper/eventSet/html/comlplete.html");
+            },function(){
+                location.href("/timeKeeper/eventSet/html/error.html");
             });
         }
     });

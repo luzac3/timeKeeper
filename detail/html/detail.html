@@ -1,3 +1,21 @@
+<?php
+    header('Content-Type: text/html; charset=utf8mb4');
+    // データの取得
+    $root = $_SERVER["DOCUMENT_ROOT"];
+    require_once($root."/timeKeeper/common/php/stored.php");
+
+    $admin = null;
+
+    if(isset($_COOKIE["admin"])){
+        // 管理者権限の確認
+        $twitterId = $_COOKIE["twitterId"];
+        $admin = $_COOKIE["admin"];
+    }
+
+    $evnt = stored("getEvnt",[$cntntCd])[0];
+
+    $evntMstr = stored("getEvntMstr",[$cntntCd])[0];
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,11 +39,16 @@
     $cntntJnnrList = stored("getCntntJnnr",$cntntCd)[0];
 ?>
 
+<div id="adminLogin">
+    <a href="/timeKeeper/entrance/html/login.html">管理者ログイン</a>
+</div>
+
 <div id="edit" class="admin">
     <!-- 管理者のみ表示 -->
-    <p>管理者にのみ表示される領域</p>
     <?php
-        echo "<a href='/timeKeeper/eventSet/html/eventSet.html?evnt=" . $cntntCd . "'>編集</a>";
+        if($admin){
+            echo "<p class="admin"><a href='/timeKeeper/eventSet/html/eventSet.html?evnt=" . $cntntCd . "'>編集</a></p>";
+        }
     ?>
     <p>
         <input type="time">分<button type="button">遅延</button><button type="button">前倒</button>
@@ -38,14 +61,15 @@
         echo "<p id='status'>状態：".$evnt["STTS"]."</p>\n";
     ?>
     <div id="notIn" class="admin">
-        <p>■未集合の参加者*管理者にのみ表示される領域■</p>
+        <p>■未集合の参加者■</p>
         <!-- 参加していない人のリスト -->
         <?php
-        forEach($cntntJnnrList as $cntntJnnr){
-            echo "<span id='".$cntntJnnr["JNNR_CD"]."'>・".$cntntJnnr["JNNR_NM"]."</span><br>\n";
-        }
+            if($admin){
+                forEach($cntntJnnrList as $cntntJnnr){
+                    echo "<span id='".$cntntJnnr["JNNR_CD"]."'>・".$cntntJnnr["JNNR_NM"]."</span><br>\n";
+                }
+            }
         ?>
-
     </div>
 
     <br>
@@ -68,19 +92,20 @@
         $joinnerNmList = explode(",",$evnt["JNNR_NM"]);
         $num = 0;
 
-        echo "<div id='joinnerUser' class='user'>\n";
-        echo "<p>■参加者リスト■</p>\n";
-        forEach($joinnerNmList as $joinnerNm){
-            echo "<span>・".$joinnerNm."</span><br>	\n";
-        }
-        echo "</div>\n";
-
-        // 管理者用の参加者リスト
-        echo "<div id='joinnerAdmin' class='admin'>\n";
-        echo "<p>■参加者リスト(管理用)■</p>\n";
-        echo "<form>\n";
-        forEach($joinnerNmList as $joinnerNm){
-            echo "<span><input type='checkbox' name='joinnerList' value='" . $joinnerCdList[$num++] . "'>".$joinnerNm."</span><br>	\n";
+        if($admin){
+            // 管理者用の参加者リスト
+            echo "<div id='joinnerAdmin' class='admin'>\n";
+            echo "<p>■参加者リスト(管理用)■</p>\n";
+            echo "<form>\n";
+            forEach($joinnerNmList as $joinnerNm){
+                echo "<span><input type='checkbox' name='joinnerList' value='" . $joinnerCdList[$num++] . "'>".$joinnerNm."</span><br>\n";
+            }
+        }else{
+            echo "<div id='joinnerUser' class='user'>\n";
+            echo "<p>■参加者リスト■</p>\n";
+            forEach($joinnerNmList as $joinnerNm){
+                echo "<span>・".$joinnerNm."</span><br>\n";
+            }
         }
         echo "</form>\n";
         echo "</div>\n";

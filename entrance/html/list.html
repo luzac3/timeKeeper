@@ -1,3 +1,10 @@
+<?php
+if(isset($_COOKIE["admin"])){
+    // 管理者権限の確認
+    $twitterId = $_COOKIE["twitterId"];
+    $admin = $_COOKIE["admin"];
+}
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,7 +15,7 @@
 <script type="text/javascript" src="/timeKeeper/common/js/getServerTime.js"></script>
 <title>企画リスト</title>
 </head>
-<body>
+<body><div id="main">
 
 <?php
     // データの取得
@@ -26,7 +33,10 @@
     </form>
     <p><span id="nowTimeShow">00:00</span>　時点での情報
 </div>
+
 <br>
+
+<p><a href="/timeKeeper/eventSet/html/eventSet.html">新規登録</a>　　<a href="/timeKeeper/entrance/html/login.html">管理者ログイン</a></p>
 
 <div id="list">
 <?php
@@ -41,5 +51,5 @@
     }
 ?>
 </div>
-</body>
+</div></body>
 </html>
