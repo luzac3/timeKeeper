@@ -64,7 +64,6 @@ function insertMaker($argArr){
       // ファイルの削除
       unlink($sqlFileDir.$tempFile);
 
-
       return $ret;
 }
 ?>

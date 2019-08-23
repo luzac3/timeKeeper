@@ -1,4 +1,11 @@
 <?php
+    if(!isset($_SESSION)){
+        session_start();
+    }
+    if(!empty($_SESSION['admin'])){
+        $admin = $_SESSION['admin'];
+        $twitterId = $_SESSION['twitterId'];
+    }
     header('Content-Type: text/html; charset=utf8mb4');
     // データの取得
     $root = $_SERVER["DOCUMENT_ROOT"];

@@ -1,17 +1,18 @@
-DROP PROCEDURE IF EXISTS getCntntJnnr;
+DROP PROCEDURE IF EXISTS setStatus;
 DELIMITER //
 -- ********************************************************************************************
--- getCntntJnnr コンテンツに紐づくユーザーを取得するｓ
+-- setStatus ステータスセット
 --
 -- 【処理概要】
---  コンテンツに紐づくユーザーを取得する
+--  ステータスを変更する
 --
 --
 -- 【呼び出し元画面】
 --   リスト
 --
 -- 【引数】
---      _cntnt_cd         :コンテンツコード
+--      _cntnt_cd : コンテンツコード
+--      _stts_cd : 更新するステータスコード
 --
 --
 -- 【戻り値】
@@ -20,13 +21,14 @@ DELIMITER //
 --      異常：99
 -- --------------------------------------------------------------------------------------------
 -- 【更新履歴】
---  2019.7.30 大杉　新規作成
+--  2019.8.23 大杉　新規作成
 -- ********************************************************************************************
-CREATE PROCEDURE `getCntntJnnr`(
+CREATE PROCEDURE `setStatus`(
     IN `_cntnt_cd` CHAR(4)
-    , OUT `exit_cd` INTEGER
+    ,IN `_stts_cd` VARCHAR(20)
+    ,OUT `exit_cd` INTEGER
 )
-COMMENT 'コンテンツに紐づくユーザー取得'
+COMMENT 'ステータスセット'
 
 BEGIN
 
@@ -34,22 +36,14 @@ BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION SET exit_cd = 99;
 
     set @query = CONCAT("
-        SELECT
-            TJ.JNNR_CD AS JNNR_CD
-            ,TJ.JNNR_NM AS JNNR_NM
-        FROM
-            T_CNTNT_JNNR TCJ
-        LEFT OUTER JOIN T_JNNR TJ
-            ON  TCJ.JNNR_CD = TJ.JNNR_CD
+      UPDATE
+          T_CNTNT
+      SET
+          STTS_CD = '",_stts_cd,"'
         WHERE
-            GTHR_FLG <> '1'
-        AND
             CNTNT_CD = '",_cntnt_cd,"'
-        ORDER BY
-              JNNR_CD ASC
         ;
-        ");
-
+    ");
     SET @query_text = @query;
 
         -- 実行

@@ -20,6 +20,14 @@ body {
 	margin-right:5%;
 }
 
+.hidden{
+    visibility:hidden;
+}
+
+.none{
+    display:none;
+}
+
 .inline-block{
 	display:inline-block;
 }

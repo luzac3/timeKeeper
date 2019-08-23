@@ -1,20 +1,29 @@
 <?php
+    if(!isset($_SESSION)){
+        session_start();
+    }
+    if(!empty($_SESSION['admin'])){
+        $admin = $_SESSION['admin'];
+        $twitterId = $_SESSION['twitterId'];
+    }
+
     header('Content-Type: text/html; charset=utf8mb4');
     // データの取得
     $root = $_SERVER["DOCUMENT_ROOT"];
     require_once($root."/timeKeeper/common/php/stored.php");
 
-    $admin = null;
-
-    if(isset($_COOKIE["admin"])){
-        // 管理者権限の確認
-        $twitterId = $_COOKIE["twitterId"];
-        $admin = $_COOKIE["admin"];
-    }
+    $cntntCd = $_GET["evnt"];
+    // データの取得
+    $root = $_SERVER["DOCUMENT_ROOT"];
 
     $evnt = stored("getEvnt",[$cntntCd])[0];
 
-    $evntMstr = stored("getEvntMstr",[$cntntCd])[0];
+    // 未参加のユーザーを取得する処理
+    $cntntJnnrList = stored("getCntntJnnr",[$cntntCd]);
+
+
+    // すべての企画参加ユーザーを取得する処理
+    $allCntntJnnrList = stored("getAllCntntJnnr",[$cntntCd]);
 ?>
 <!DOCTYPE html>
 <html>
@@ -22,90 +31,122 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" href="/timeKeeper/common/css/base.css" type="text/css" media="screen">
 <link rel="stylesheet" href="/timeKeeper/common/css/table_conf.css" type="text/css" media="screen">
+<script type="text/javascript" src="/timeKeeper/API/javascript/call_stored.js"></script>
 <script type="text/javascript" src="/timeKeeper/detail/js/detail.js"></script>
 <script type="text/javascript" src="/timeKeeper/detail/js/checker.js"></script>
+<script type="text/javascript" src="/timeKeeper/common/js/defaultAjax.js"></script>
+<script type="text/javascript" src="/timeKeeper/common/js/elemEventSetter.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <title>企画詳細</title>
 </head>
 <body><div id="main">
-<?php
-    $cntntCd = $_GET["evnt"];
-    // データの取得
-    $root = $_SERVER["DOCUMENT_ROOT"];
-    require_once($root."/timeKeeper/common/php/stored.php");
 
-    $evnt = stored("getEvnt",[$cntntCd])[0];
-
-    // 未参加のユーザーを取得する処理
-    $cntntJnnrList = stored("getCntntJnnr",$cntntCd)[0];
-?>
+<div class="none">企画コード:<form>
+    <?php
+        echo "<input type='text'  id='cntntCd' value='".$cntntCd."'>\n";
+    ?>
+</form></div>
 
 <div id="adminLogin">
     <a href="/timeKeeper/entrance/html/login.html">管理者ログイン</a>
 </div>
 
-<div id="edit" class="admin">
-    <!-- 管理者のみ表示 -->
-    <?php
-        if($admin){
-            echo "<p class="admin"><a href='/timeKeeper/eventSet/html/eventSet.html?evnt=" . $cntntCd . "'>編集</a></p>";
-        }
-    ?>
-    <p>
-        <input type="time">分<button type="button">遅延</button><button type="button">前倒</button>
-   </p>
-</div>
-<br>
+<?php
+    if($admin){
+        // adminもちの場合のみ生成されるadmin記録用
+        echo "<div class='admin'><form><input id='adminUser' type='text' value='".$twitterId."' disabled></form></div>\n";
+    }
+
+    if($admin){
+        echo "<div id='edit' class='admin'>\n";
+    }else{
+        echo "<div id='edit' class='admin none'>\n";
+    }
+
+    echo "<h1 id='title'>".$evnt["TTL"]."</h1>\n";
+    echo "<div id='adminLogin'>\n";
+    echo "<a href='/timeKeeper/entrance/html/list.html'>リストに戻る</a>\n";
+    echo "</div>\n";
+    echo "<p class='admin'><a href='/timeKeeper/eventSet/html/eventSet.html?evnt=" . $cntntCd . "'>編集</a></p>\n";
+    echo "<p><input id='time' type='time' value='00:00'>(時:分)<button type='button' value='delay'>遅延</button><button type='button' value='advance'>前倒</button></p>\n";
+    echo "</div>\n";
+    echo "<br>\n";
+?>
+
 <div>
     <?php
-        echo "<h1 id='title'>".$evnt["TTL"]."</h1>\n";
         echo "<p id='status'>状態：".$evnt["STTS"]."</p>\n";
-    ?>
-    <div id="notIn" class="admin">
-        <p>■未集合の参加者■</p>
-        <!-- 参加していない人のリスト -->
-        <?php
-            if($admin){
-                forEach($cntntJnnrList as $cntntJnnr){
-                    echo "<span id='".$cntntJnnr["JNNR_CD"]."'>・".$cntntJnnr["JNNR_NM"]."</span><br>\n";
-                }
+
+        if($admin){
+            echo "<div id='notIn' class='admin'>\n";
+        }else{
+            echo "<div id='notIn' class='admin none'>\n";
+        }
+        echo "<p>■未集合の参加者■</p>\n";
+        if(!empty($cntntJnnrList)){
+            forEach($cntntJnnrList as $cntntJnnr){
+                echo "<span id='".$cntntJnnr["JNNR_CD"]."'>".$cntntJnnr["JNNR_NM"]."</span><br>\n";
             }
-        ?>
-    </div>
+        }
+        echo "</div>\n";
+        echo "<br>\n";
 
-    <br>
-
-    <?php
-        echo "<p id='time'>■開催時間　".$evnt["STT_HM"]."～".$evnt["END_HM"]."</p>\n";
+        echo "<p id='date'>■開催時間　".$evnt["STT_HM"]."～".$evnt["END_HM"]."</p>\n";
         echo "<p id='gatherTime'>■参加者集合時間　".$evnt["GTHR_HM"]."</p>\n";
-
 
         echo "<div id='content'>\n";
         echo "<p>■内容■</p>\n";
         echo "<p>".$evnt["CNTNT"]."</p>\n";
         echo "</div>\n";
-    ?>
+        echo "<br>\n";
 
-    <br>
-
-    <?php
-        $joinnerCdList = explode(",",$evnt["JNNR_CD"]);
-        $joinnerNmList = explode(",",$evnt["JNNR_NM"]);
         $num = 0;
 
+        // 管理者用の参加者リスト
         if($admin){
-            // 管理者用の参加者リスト
             echo "<div id='joinnerAdmin' class='admin'>\n";
-            echo "<p>■参加者リスト(管理用)■</p>\n";
-            echo "<form>\n";
-            forEach($joinnerNmList as $joinnerNm){
-                echo "<span><input type='checkbox' name='joinnerList' value='" . $joinnerCdList[$num++] . "'>".$joinnerNm."</span><br>\n";
-            }
         }else{
-            echo "<div id='joinnerUser' class='user'>\n";
-            echo "<p>■参加者リスト■</p>\n";
-            forEach($joinnerNmList as $joinnerNm){
-                echo "<span>・".$joinnerNm."</span><br>\n";
+            echo "<div id='joinnerAdmin' class='admin none'>\n";
+        }
+        echo "<p>■参加者リスト(管理用)■</p>\n";
+        echo "<form>\n";
+        forEach($allCntntJnnrList as $allCntntJnnr){
+            if($allCntntJnnr["GTHR_FLG"]=="1"){
+              echo "<span><input type='checkbox' name='joinnerList' value='" . $allCntntJnnr["JNNR_CD"] . "' checked>".$allCntntJnnr["JNNR_NM"]."</span><br>\n";
+            }else{
+
+                echo "<span><input type='checkbox' name='joinnerList' value='" . $allCntntJnnr["JNNR_CD"] . "'>".$allCntntJnnr["JNNR_NM"]."</span><br>\n";
             }
+        }
+        echo "</form>\n";
+        echo "</div>\n";
+        if(!$admin){
+            echo "<div id='joinnerUser' class='user'>\n";
+        }else{
+            echo "<div id='joinnerUser' class='user none'>\n";
+        }
+        echo "<p>■参加者リスト■</p>\n";
+        forEach($allCntntJnnrList as $allCntntJnnr){
+            echo "<span>・".$allCntntJnnr["JNNR_NM"]."</span><br>\n";
+        }
+        echo "</div>\n";
+
+        // 準備チェッカ
+        if($admin){
+            echo "<div id='readyChecker' class='admin'>\n";
+        }else{
+            echo "<div id='readyChecker' class='admin none'>\n";
+        }
+        echo "<p>■全準備完了■</p>\n";
+        echo "<form>\n";
+        if((int)$evnt["STTS_CD"] < 3){
+            echo "<span><input type='checkbox' name='ready' value='ready' disabled>準備完了</span><br>\n";
+        }else if($evnt["STTS_CD"]=="5"){
+            echo "<span><input type='checkbox' name='ready' value='ready' checked>準備完了</span><br>\n";
+        }else if($evnt["STTS_CD"] > 5){
+            echo "<span><input type='checkbox' name='ready' value='ready' disabled checked>準備完了</span><br>\n";
+        }else{
+            echo "<span><input type='checkbox' name='ready' value='ready'>準備完了</span><br>\n";
         }
         echo "</form>\n";
         echo "</div>\n";

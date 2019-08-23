@@ -1,9 +1,11 @@
 <?php
-if(isset($_COOKIE["admin"])){
-    // 管理者権限の確認
-    $twitterId = $_COOKIE["twitterId"];
-    $admin = $_COOKIE["admin"];
-}
+    if(!isset($_SESSION)){
+        session_start();
+    }
+    if(!empty($_SESSION['admin'])){
+        $admin = $_SESSION['admin'];
+        $twitterId = $_SESSION['twitterId'];
+    }
 ?>
 <!DOCTYPE html>
 <html>

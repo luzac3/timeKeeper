@@ -33,6 +33,9 @@ BEGIN
     -- 異常終了ハンドラ
     DECLARE EXIT HANDLER FOR SQLEXCEPTION SET exit_cd = 99;
 
+    -- 更新処理
+    CALL updateSttsCd(@exit_cd);
+
     set @query = CONCAT("
         SELECT
             TC.CNTNT_CD AS CNTNT_CD

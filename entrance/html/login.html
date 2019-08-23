@@ -35,14 +35,14 @@
             ,"click"
             ,function(){
                 if(this.value=="login"){
-                    let tid = document.getElementById("twitterId");
-                    let pass = document.getElementById("pass");
+                    let tid = document.getElementById("twitterId").value;
+                    let pass = document.getElementById("pass").value;
 
                     // ログインチェック
                     defaultAjax(
                       {
-                        ,twitterId:tid
-                        ,pass:pass
+                          twitterId:tid
+                          ,pass:pass
                       }
                       ,"/timeKeeper/common/php/loginCheck.php"
                     ).then(function(data){
@@ -57,7 +57,7 @@
                           }
                         }
                     },function(err){
-                        alert("エラーが発生しました");
+                        alert(err);
                     });
                 }
             }
