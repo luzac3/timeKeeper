@@ -20,6 +20,10 @@ body {
 	margin-right:5%;
 }
 
+#status{
+  font-size:150%;
+}
+
 .hidden{
     visibility:hidden;
 }
