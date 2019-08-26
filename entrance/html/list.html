@@ -25,12 +25,12 @@
     require_once($root."/timeKeeper/common/php/stored.php");
 
     $list = stored("getEvntLst",NULL);
-?>
 if($admin){
     echo "<div id = 'nowTime' class='admin'>\n";
 }else{
     echo "<div id = 'nowTime' class='none'>\n";
 }
+?>
     <!-- 現在時間をごまかすツール -->
     <form>
         <p><input type="number" id="userInputHour">時<input type="number" id="userInputTime">分</p>

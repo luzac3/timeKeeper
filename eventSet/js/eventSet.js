@@ -64,9 +64,9 @@ window.onload=function(){
 
             defaultAjax(argArr,"/timeKeeper/eventSet/php/register.php").then(function(data){
                 // ページ繊維
-                location.href("/timeKeeper/eventSet/html/comlplete.html");
+                location.href="/timeKeeper/eventSet/html/complete.html";
             },function(){
-                location.href("/timeKeeper/eventSet/html/error.html");
+                location.href="/timeKeeper/eventSet/html/error.html";
             });
         }
     });
