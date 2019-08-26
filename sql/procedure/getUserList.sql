@@ -25,7 +25,7 @@ DELIMITER //
 CREATE PROCEDURE `getUserList`(
     OUT `exit_cd` INTEGER
 )
-COMMENT 'イベントリスト取得'
+COMMENT 'ユーザーリスト取得'
 
 BEGIN
 
@@ -41,7 +41,7 @@ BEGIN
         WHERE
             JN_CD = '1'
         ORDER BY
-              JNNR_CD ASC
+              JNNR_NM ASC
         ;
         ");
 
