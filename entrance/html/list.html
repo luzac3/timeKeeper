@@ -26,8 +26,11 @@
 
     $list = stored("getEvntLst",NULL);
 ?>
-
-<div id = "nowTime" class="admin">
+if($admin){
+    echo "<div id = 'nowTime' class='admin'>\n";
+}else{
+    echo "<div id = 'nowTime' class='none'>\n";
+}
     <!-- 現在時間をごまかすツール -->
     <form>
         <p><input type="number" id="userInputHour">時<input type="number" id="userInputTime">分</p>
@@ -48,12 +51,16 @@
 <div id="list">
 <?php
     forEach($list as $row){
-        echo "<p>";
+        echo "<p>\n";
         echo $row["STT_HM"];
         echo "～";
         echo $row["END_HM"];
-        echo "　";
+        echo "　\n";
         echo "<a href='/timeKeeper/detail/html/detail.html?evnt=".$row["CNTNT_CD"]."'>".$row["TTL"]."</a>";
+        echo "　　\n";
+        echo "<span class='status'>\n";
+        echo $row["STTS"];
+        echo "</span>\n";
         echo "</p>\n";
     }
 ?>

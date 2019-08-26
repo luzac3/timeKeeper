@@ -1,61 +1,65 @@
 DROP PROCEDURE IF EXISTS getEvntLst;
 DELIMITER //
 -- ********************************************************************************************
--- getEvntLst ƒCƒxƒ“ƒgˆê——‚ðŽæ“¾‚·‚é
+-- getEvntLst ï¿½Cï¿½xï¿½ï¿½ï¿½gï¿½ê——ï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½
 --
--- yˆ—ŠT—vz
---  ‘S‚Ä‚ÌƒCƒxƒ“ƒg‚ðŠJÃ“úŽž‡‚É—ñ‹“‚·‚é
---
---
--- yŒÄ‚Ño‚µŒ³‰æ–Êz
---   ƒGƒ“ƒgƒ‰ƒ“ƒX
---
--- yˆø”z
---   ‚È‚µ
+-- ï¿½yï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½vï¿½z
+--  ï¿½Sï¿½Ä‚ÌƒCï¿½xï¿½ï¿½ï¿½gï¿½ï¿½ï¿½Jï¿½Ã“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É—ñ‹“‚ï¿½ï¿½ï¿½
 --
 --
--- y–ß‚è’lz
+-- ï¿½yï¿½Ä‚Ñoï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êz
+--   ï¿½Gï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½X
+--
+-- ï¿½yï¿½ï¿½ï¿½ï¿½ï¿½z
+--   ï¿½È‚ï¿½
+--
+--
+-- ï¿½yï¿½ß‚ï¿½ï¿½lï¿½z
 --      exit_cd            : exit_cd
---      ³íF0
---      ˆÙíF99
+--      ï¿½ï¿½ï¿½ï¿½ï¿½F0
+--      ï¿½Ùï¿½ï¿½F99
 -- --------------------------------------------------------------------------------------------
--- yXV—š—ðz
---  2019.7.23 ‘å™@V‹Kì¬
+-- ï¿½yï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½z
+--  2019.7.23 ï¿½å™ï¿½@ï¿½Vï¿½Kï¿½ì¬
 -- ********************************************************************************************
 CREATE PROCEDURE `getEvntLst`(
     OUT `exit_cd` INTEGER
 )
-COMMENT 'ƒCƒxƒ“ƒgƒŠƒXƒgŽæ“¾'
+COMMENT 'ï¿½Cï¿½xï¿½ï¿½ï¿½gï¿½ï¿½ï¿½Xï¿½gï¿½æ“¾'
 
 BEGIN
 
-    -- ˆÙíI—¹ƒnƒ“ƒhƒ‰
+    -- ï¿½Ùï¿½ï¿½Iï¿½ï¿½ï¿½nï¿½ï¿½ï¿½hï¿½ï¿½
     DECLARE EXIT HANDLER FOR SQLEXCEPTION SET exit_cd = 99;
 
     set @query = CONCAT("
         SELECT
-            CNTNT_CD
-            ,PRNT_CNTNT_CD
-            ,TTL
-            ,STTS_CD
-            ,STT_TM
-            ,DATE_FORMAT(STT_TM, '%H:%i') as STT_HM
-            ,DATE_FORMAT(STT_TM, '%Y%m%d %H:%i') as STT_DTTM
-            ,END_TM
-            ,DATE_FORMAT(END_TM, '%H:%i') as END_HM
-            ,DATE_FORMAT(END_TM, '%Y%m%d %H:%i') as END_DTTM
-            ,DATE_FORMAT(GTHR_TM, '%H:%i') as GTHR_HM
-            ,CNTNT
-            ,RMRKS
+            TC.CNTNT_CD
+            ,TC.PRNT_CNTNT_CD
+            ,TC.TTL
+            ,TC.STTS_CD
+            ,CSC.STTS
+            ,TC.STT_TM
+            ,DATE_FORMAT(TC.STT_TM, '%H:%i') as STT_HM
+            ,DATE_FORMAT(TC.STT_TM, '%Y%m%d %H:%i') as STT_DTTM
+            ,TC.END_TM
+            ,DATE_FORMAT(TC.END_TM, '%H:%i') as END_HM
+            ,DATE_FORMAT(TC.END_TM, '%Y%m%d %H:%i') as END_DTTM
+            ,DATE_FORMAT(TC.GTHR_TM, '%H:%i') as GTHR_HM
+            ,TC.CNTNT
+            ,TC.RMRKS
         FROM
-            T_CNTNT
+            T_CNTNT TC
+        LEFT OUTER JOIN C_STTS_CD CSC
+            ON
+                TC.STTS_CD = CSC.STTS_CD
         ORDER BY STT_TM,END_TM DESC
         ;
     ");
 
     SET @query_text = @query;
 
-        -- ŽÀs
+        -- ï¿½ï¿½ï¿½s
     PREPARE main_query FROM @query_text;
     EXECUTE main_query;
     DEALLOCATE PREPARE main_query;
