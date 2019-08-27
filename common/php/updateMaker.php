@@ -40,7 +40,7 @@ function updateMaker($argArr){
       // 一時ファイル用のタイムスタンプを取得
       $time = time();
       // 一時ファイル名を設定
-      $tempFile = "temp_" . $time . ".sql";
+      $tempFile = "updateTemp_" . $time . ".sql";
 
       // sqlファイル生成場所
       $sqlFileDir = $root . "timeKeeper/sql/";
