@@ -53,14 +53,18 @@ window.onload=function(){
                   {
                     tableName:"T_CNTNT_JNNR"
                     ,sql:[cntntCd,jnnrCd,gthrFlg]
-                    ,terms:"JNNR_CD='"+jnnrCd+"'"
+                    ,terms:"JNNR_CD='"+jnnrCd+"' AND CNTNT_CD='"+cntntCd+"'"
                   }
                   ,"/timeKeeper/detail/php/register.php").then(
                 function(){
                     let parentElem = document.getElementById("notIn");
 
                     if(gthrFlg){
-                        parentElem.removeChild(document.getElementById(jnnrCd).nextElementSibling);
+                        console.log(document.getElementById(jnnrCd));
+                        let delTarget = document.getElementById(jnnrCd).nextElementSibling;
+                        if(delTarget){
+                            parentElem.removeChild(delTarget);
+                        }
                         parentElem.removeChild(document.getElementById(jnnrCd));
                     }else{
                         let elem = document.createElement("span");
