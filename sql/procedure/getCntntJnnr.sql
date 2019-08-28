@@ -42,7 +42,7 @@ BEGIN
         LEFT OUTER JOIN T_JNNR TJ
             ON  TCJ.JNNR_CD = TJ.JNNR_CD
         WHERE
-            GTHR_FLG <> '1'
+            GTHR_FLG IS NULL
         AND
             CNTNT_CD = '",_cntnt_cd,"'
         ORDER BY
