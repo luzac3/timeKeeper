@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
+<link rel="stylesheet" href="/anc/common/css/base.css" type="text/css" media="screen">
+<link rel="stylesheet" href="/anc/common/css/table_conf.css" type="text/css" media="screen">
+<script type="text/javascript" src="/timeKeeper/API/javascript/storager.js"></script>
+<script type="text/javascript" src="/timeKeeper/common/js/defaultAjax.js"></script>
+<script type="text/javascript" src="/timeKeeper/common/js/elemEventSetter.js"></script>
+<script type="text/javascript" src="/timeKeeper/API/javascript/call_stored.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<title>演者ログイン</title>
+</head>
+<body><div id="main">
+  <p>演者ログイン画面</p>
+  <div>
+    <p>
+    　　<!-- 一応IDが途中で切れてる可能性もあるので頭10文字しか見ない -->
+    　　<!-- なお、今回は管理者扱いしかありません -->
+      　TwitterID(@あり)<input type="text" id="twitterId">
+        参加者番号(パスマーケットのもの)<input type="text" id="psm">
+      <br>
+      <button type="button" value="login">ログイン</button>
+    </p>
+  </div>
+</div></body>
+
+<script type="text/javascript">
+    window.onload=function(){
+        elemEventSetter(
+            document.getElementsByTagName("button")
+            ,"click"
+            ,function(){
+                if(this.value=="login"){
+                    let tid = document.getElementById("twitterId").value;
+                    let pass = document.getElementById("psm").value;
+
+                    // ログインチェック
+                    defaultAjax(
+                      {
+                          twitterId:tid
+                          ,pass:pass
+                      }
+                      ,"/timeKeeper/common/php/loginCheck.php"
+                    ).then(function(data){
+                        if(data!=0){
+                            alert(data);
+                        }else{
+                          let ref = document.referrer;
+                          if(!ref.includes("wolfnet-twei")){
+                              location.href="/timeKeeper/entrance/html/list.html";
+                          }else{
+                              location.href=ref;
+                          }
+                        }
+                    },function(err){
+                        alert(err);
+                    });
+                }
+            }
+            ,null
+        );
+    };
+</script>

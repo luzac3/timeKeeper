@@ -67,7 +67,11 @@
         echo "<p>". $parentEvnt["TTL"] ."</p>\n";
         echo "<form><p><input type='text' id='parentEvntCd' disabled='disabled' value='".$parentEvnt["CNTNT_CD"]."'></p></form>\n";
     }else{
-        echo "<form><p><input type='text' id='parentEvntCd' disabled='disabled' value='null'></p></form>\n";
+        if(!empty($_GET["prntCntntCd"])){
+            echo "<form><p><input type='text' id='parentEvntCd' disabled='disabled' value='".$_GET["prntCntntCd"]."'></p></form>\n";
+        }else{
+            echo "<form><p><input type='text' id='parentEvntCd' disabled='disabled' value='null'></p></form>\n";
+        }
     }
 ?>
     <!-- サブイベント表示領域(親イベントから派生させた場合、親イベントのタイトルが入る) -->

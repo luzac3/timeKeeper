@@ -26,7 +26,8 @@
     $root = $_SERVER["DOCUMENT_ROOT"];
     require_once($root."/timeKeeper/common/php/stored.php");
 
-    $list = stored("getEvntLst",NULL);
+    // ここを修正
+    $parentEvntList = stored("getParentEvntLst",NULL);
 if($admin){
     echo "<div id = 'nowTime' class='admin'>\n";
 }else{
@@ -48,23 +49,46 @@ if($admin){
         echo "<a href='/timeKeeper/eventSet/html/eventSet.html'>新規登録</a>　　";
     }
 ?>
-<a href="/timeKeeper/entrance/html/login.html">管理者ログイン</a></p>
+<a href="/timeKeeper/entrance/html/login.html">管理者ログイン</a>　　<a href="/timeKeeper/entrance/html/pfrmrLogin.html">演者ログイン</a></p>
 
 <div id="list">
 <?php
-    forEach($list as $row){
-        echo "<p>\n";
-        echo $row["STT_HM"];
-        echo "～";
-        echo $row["END_HM"];
-        echo "　\n";
-        echo "<a href='/timeKeeper/detail/html/detail.html?evnt=".$row["CNTNT_CD"]."'>".$row["TTL"]."</a>";
-        echo "　　\n";
-        echo "<span class='status'>\n";
-        echo $row["STTS"];
-        echo "</span>\n";
-        echo "</p>\n";
+
+    function setList($list,$para){
+        forEach($list as $row){
+          echo "<p>\n";
+          for($i = 0; $i < $para; $i++){
+              echo "　";
+          }
+          echo $row["STT_HM"];
+          echo "～";
+          echo $row["END_HM"];
+          echo "　\n";
+          echo "<a href='/timeKeeper/detail/html/detail.html?evnt=".$row["CNTNT_CD"]."'>".$row["TTL"]."</a>";
+          echo "　　\n";
+          echo "<span class='status'>\n";
+          echo $row["STTS"];
+          echo "</span>\n";
+          echo "</p>\n";
+
+
+          // ここを修正
+          $subEvntLst = stored("getSubEvntLst",[$row["CNTNT_CD"]]);
+
+          $para++;
+
+          if(!empty($subEvntLst)){setList($subEvntLst,$para);}
+
+          $para--;
+
+        }
     }
+    if(!empty($parentEvntList)){
+        setList($parentEvntList,0);
+    }else{
+        echo "<p>イベントが登録されていません</p>\n";
+    }
+
 ?>
 </div>
 </div></body>
