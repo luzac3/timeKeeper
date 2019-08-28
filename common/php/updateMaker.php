@@ -23,9 +23,16 @@ function updateMaker($argArr){
 
       forEach($columnList as $column){
           $sql .= $column["Field"];
-          $sql .= "='";
-          $sql .= $updateDataArr[$num++];
-          $sql .= "',";
+          if($updateDataArr[$num] == "null" || $updateDataArr[$num] == ""){
+              $sql .= "=";
+              $sql .= "NULL";
+              $sql .= ",";
+          }else{
+              $sql .= "='";
+              $sql .= $updateDataArr[$num];
+              $sql .= "',";
+          }
+          $num++;
       };
       $sql = substr($sql, 0, -1);
 

@@ -15,6 +15,10 @@ if(!empty($_POST["argArr"])){
         ,array($argArr["cntntCd"])
     );
 
+    if($argArr["sqlCntnt"]["parentEvntCd"] === ""){
+        $argArr["sqlCntnt"]["parentEvntCd"] = NULL;
+    }
+
     $output1 = updateMaker(
       array(
         "tableName"=>$argArr["tableNameCntnt"]

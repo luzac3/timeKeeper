@@ -38,7 +38,7 @@ BEGIN
             CB.STFF_CD as STFF_CD
             ,TJ.JNNR_NM as JNNR_NM
             ,TJ.TWITTER_ID as TWITTER_ID
-            ,CB.ATHRTY_CD as ATHRTY_CD
+            ,MIN(CAST(CB.ATHRTY_CD as SIGNED)) as ATHRTY_CD
             ,CB.HSH as HSH
         FROM
             C_BLNGS CB

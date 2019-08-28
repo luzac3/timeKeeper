@@ -3,7 +3,7 @@
         session_start();
     }
     if(!empty($_SESSION['admin'])){
-        $admin = $_SESSION['admin'];
+        $admin = (Int) $_SESSION['admin'];
         $twitterId = $_SESSION['twitterId'];
     }
 ?>
@@ -20,7 +20,6 @@
 <title>企画リスト</title>
 </head>
 <body><div id="main">
-
 <?php
     // データの取得
     $root = $_SERVER["DOCUMENT_ROOT"];
@@ -28,6 +27,7 @@
 
     // ここを修正
     $parentEvntList = stored("getParentEvntLst",NULL);
+
 if($admin){
     echo "<div id = 'nowTime' class='admin'>\n";
 }else{
@@ -45,7 +45,7 @@ if($admin){
 <br>
 <p>
 <?php
-    if($admin){
+    if($admin == 1){
         echo "<a href='/timeKeeper/eventSet/html/eventSet.html'>新規登録</a>　　";
     }
 ?>
@@ -54,7 +54,7 @@ if($admin){
 <div id="list">
 <?php
 
-    function setList($list,$para){
+    function setList($list,$para,$admin){
         forEach($list as $row){
           echo "<p>\n";
           for($i = 0; $i < $para; $i++){
@@ -71,20 +71,22 @@ if($admin){
           echo "</span>\n";
           echo "</p>\n";
 
-
-          // ここを修正
           $subEvntLst = stored("getSubEvntLst",[$row["CNTNT_CD"]]);
 
           $para++;
 
-          if(!empty($subEvntLst)){setList($subEvntLst,$para);}
+          if(!empty($subEvntLst)){
+            if($admin > 0){
+                setList($subEvntLst,$para,$admin);
+            }
+          }
 
           $para--;
 
         }
     }
     if(!empty($parentEvntList)){
-        setList($parentEvntList,0);
+        setList($parentEvntList,0,$admin);
     }else{
         echo "<p>イベントが登録されていません</p>\n";
     }

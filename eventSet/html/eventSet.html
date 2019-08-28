@@ -70,7 +70,7 @@
         if(!empty($_GET["prntCntntCd"])){
             echo "<form><p><input type='text' id='parentEvntCd' disabled='disabled' value='".$_GET["prntCntntCd"]."'></p></form>\n";
         }else{
-            echo "<form><p><input type='text' id='parentEvntCd' disabled='disabled' value='null'></p></form>\n";
+            echo "<form><p><input type='text' id='parentEvntCd' disabled='disabled' value=''></p></form>\n";
         }
     }
 ?>
@@ -99,6 +99,7 @@
                     if(in_array($AllJoinner["JNNR_CD"],$jnnrCdArr)){
                         $jnnrCdArr = array_diff($jnnrCdArr, array($AllJoinner["JNNR_CD"]));
                         echo "<label class='userList inline-block'><input type='checkbox' class='userListBox' name='userList' value='".$AllJoinner["JNNR_CD"]."' checked>".str_replace("?","□",$AllJoinner["JNNR_NM"])."</label>\n";
+                        continue;
                     }
                     echo "<label class='userList inline-block'><input type='checkbox' class='userListBox' name='userList' value='".$AllJoinner["JNNR_CD"]."'>".str_replace("?","□",$AllJoinner["JNNR_NM"])."</label>\n";
                 }

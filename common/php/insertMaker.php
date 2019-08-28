@@ -20,7 +20,7 @@ function insertMaker($argArr){
       forEach($colArr as $rowArr){
           $sql .= "(";
           forEach($rowArr as $item){
-              if($item =="null"){
+              if($item =="null" || $item == ""){
                   $sql .= "NULL,";
                   continue;
               }
