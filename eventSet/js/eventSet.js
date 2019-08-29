@@ -21,7 +21,7 @@ window.onload=function(){
                       sqlJoinnerArr.push([
                           cntntCd
                           ,nodeList[i].value
-                          ,NULL
+                          ,null
                       ]);
                     }
                     continue;

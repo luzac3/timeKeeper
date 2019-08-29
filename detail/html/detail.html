@@ -63,16 +63,14 @@
         echo "<div class='admin'><form><input id='adminUser' type='text' value='".$twitterId."' disabled></form></div>\n";
     }
 
+    echo "<h1 id='title'>".$evnt["TTL"]."</h1>\n";
+
     if($admin == 1){
         echo "<div id='edit' class='admin'>\n";
     }else{
         echo "<div id='edit' class='admin none'>\n";
     }
 
-    echo "<h1 id='title'>".$evnt["TTL"]."</h1>\n";
-    echo "<div id='adminLogin'>\n";
-    echo "<a href='/timeKeeper/entrance/html/list.html'>リストに戻る</a>\n";
-    echo "</div>\n";
     echo "<p class='admin'><a href='/timeKeeper/eventSet/html/eventSet.html?evnt=" . $cntntCd . "'>編集</a>　　<a href='/timeKeeper/eventSet/html/eventSet.html?prntCntntCd=" . $cntntCd . "'>サブイベント作成</a></p>\n";
     echo "<p><input id='time' type='time' value='00:00'>(時:分)<button type='button' value='delay'>遅延</button><button type='button' value='advance'>前倒</button></p>\n";
     echo "</div>\n";
@@ -109,7 +107,7 @@
         $num = 0;
 
         // 管理者用の参加者リスト
-        if($admin){
+        if($admin == 1){
             echo "<div id='joinnerAdmin' class='admin'>\n";
         }else{
             echo "<div id='joinnerAdmin' class='admin none'>\n";
@@ -126,7 +124,7 @@
         }
         echo "</form>\n";
         echo "</div>\n";
-        if(!$admin){
+        if($admin != 1){
             echo "<div id='joinnerUser' class='user'>\n";
         }else{
             echo "<div id='joinnerUser' class='user none'>\n";
@@ -138,7 +136,7 @@
         echo "</div>\n";
 
         // 準備チェッカ
-        if($admin){
+        if($admin == 1){
             echo "<div id='readyChecker' class='admin'>\n";
         }else{
             echo "<div id='readyChecker' class='admin none'>\n";
