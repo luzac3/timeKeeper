@@ -17,6 +17,7 @@
 <link rel="stylesheet" href="/timeKeeper/common/css/table_conf.css" type="text/css" media="screen">
 <script type="text/javascript" src="/timeKeeper/entrance/js/list.js"></script>
 <script type="text/javascript" src="/timeKeeper/common/js/getServerTime.js"></script>
+<script type="text/javascript" src="/timeKeeper/common/js/elemEventSetter.js"></script>
 <title>企画リスト</title>
 </head>
 <body><div id="main">
@@ -93,6 +94,17 @@ if($admin){
         echo "<p>イベントが登録されていません</p>\n";
     }
 
+
+    if($admin){
+        echo "<div class='admin'>";
+        echo "<a href='/timeKeeper/entrance/html/userCntntList.html'>参加する演目の確認</a>\n";
+        echo "</div>\n";
+    }
+
+    if($admin == 1){
+        // CSV出力用
+        echo "<div class='admin'><a id='csv' download='kikakuList.csv' href='javascript.void(0)'>CSV出力</a></div>\n";
+    }
 ?>
 </div>
 </div></body>

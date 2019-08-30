@@ -1,0 +1,46 @@
+<?php
+    if(!isset($_SESSION)){
+        session_start();
+    }
+    if(!empty($_SESSION['admin'])){
+        $admin = (Int) $_SESSION['admin'];
+        $twitterId = $_SESSION['twitterId'];
+        $jnnrCd = $_SESSION["jnnrCd"];
+    }
+?>
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
+<link rel="stylesheet" href="/timeKeeper/common/css/base.css" type="text/css" media="screen">
+<link rel="stylesheet" href="/timeKeeper/common/css/table_conf.css" type="text/css" media="screen">
+<script type="text/javascript" src="/timeKeeper/entrance/js/list.js"></script>
+<script type="text/javascript" src="/timeKeeper/common/js/getServerTime.js"></script>
+<script type="text/javascript" src="/timeKeeper/common/js/elemEventSetter.js"></script>
+<title>企画リスト</title>
+</head>
+<body><div id="main">
+<?php
+    // データの取得
+    $root = $_SERVER["DOCUMENT_ROOT"];
+    require_once($root."/timeKeeper/common/php/stored.php");
+
+    $userCntntList = stored("getUserCntntList",[$jnnrCd]);
+    // 自身の演目確認用
+    echo "<div class='admin'>";
+    forEach($userCntntList as $userCntnt){
+        echo $userCntnt["STT_HM"];
+        echo "～";
+        echo $userCntnt["END_HM"];
+        echo "(集合時間:".$userCntnt["GTHR_HM"].")";
+        echo "　\n";
+        echo "<a href='/timeKeeper/detail/html/detail.html?evnt=".$userCntnt["CNTNT_CD"]."'>".$userCntnt["TTL"]."</a>\n";
+          echo "<br>\n";
+      }
+      echo "</div>\n";
+
+?>
+</div></body>
+</html>

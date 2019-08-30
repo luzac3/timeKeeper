@@ -1,17 +1,17 @@
-DROP PROCEDURE IF EXISTS getHash;
+DROP PROCEDURE IF EXISTS getUserCntntList;
 DELIMITER //
 -- ********************************************************************************************
--- getHash ハッシュコード取得
+-- getUserCntntList 参加者演目取得
 --
 -- 【処理概要】
---  ハッシュコードを取得する
+--  参加者演目取得
 --
 --
 -- 【呼び出し元画面】
 --   リスト
 --
 -- 【引数】
---      _twitter_id     : TwitterID
+--      _jnnr_cd : 参加者コード
 --
 --
 -- 【戻り値】
@@ -20,13 +20,13 @@ DELIMITER //
 --      異常：99
 -- --------------------------------------------------------------------------------------------
 -- 【更新履歴】
---  2019.7.23 大杉　新規作成
+--  2019.8.30 大杉　新規作成
 -- ********************************************************************************************
-CREATE PROCEDURE `getHash`(
-    IN `_twitter_id` CHAR(10)
-    , OUT `exit_cd` INTEGER
+CREATE PROCEDURE `getUserCntntList`(
+    IN `_jnnr_cd` CHAR(4)
+    ,OUT `exit_cd` INTEGER
 )
-COMMENT 'ハッシュコード取得'
+COMMENT '参加者演目取得'
 
 BEGIN
 
@@ -34,21 +34,23 @@ BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION SET exit_cd = 99;
 
     set @query = CONCAT("
-        SELECT
-            CB.STFF_CD as STFF_CD
-            ,TJ.JNNR_CD as JNNR_CD
-            ,TJ.JNNR_NM as JNNR_NM
-            ,TJ.TWITTER_ID as TWITTER_ID
-            ,MIN(CAST(CB.ATHRTY_CD as SIGNED)) as ATHRTY_CD
-            ,CB.HSH as HSH
-        FROM
-            C_BLNGS CB
-        left outer join T_JNNR TJ
-            ON CB.STFF_CD = TJ.JNNR_CD
-        WHERE TJ.TWITTER_ID LIKE '",_twitter_id,"%'
+      SELECT
+        TCJ.JNNR_CD AS JNNR_CD
+        ,TCJ.CNTNT_CD AS CNTNT_CD
+        ,TC.TTL AS TTL
+        ,DATE_FORMAT(TC.STT_TM, '%H:%i') as STT_HM
+        ,DATE_FORMAT(TC.END_TM, '%H:%i') as END_HM
+        ,DATE_FORMAT(TC.GTHR_TM, '%H:%i') as GTHR_HM
+      FROM
+        T_CNTNT_JNNR TCJ
+    LEFT OUTER JOIN T_CNTNT TC
+        ON TCJ.CNTNT_CD = TC.CNTNT_CD
+    WHERE
+        TCJ.JNNR_CD = '0190'
+    ORDER BY
+        STT_TM ASC
         ;
     ");
-
     SET @query_text = @query;
 
         -- 実行

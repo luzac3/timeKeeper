@@ -12,6 +12,48 @@ window.onload = function(){
     chooseTime.forEach(function(element){
         element.addEventListener("click", changeTimeType);
     });
+
+    elemEventSetter(
+        document.getElementById("csv")
+        ,"click"
+        ,function(){
+            let elems = document.getElementById("list").getElementsByTagName("p");
+            let textDataArr = [];
+            let textData = "";
+            let elemsLen = elems.length;
+            let parentContentTime = "";
+
+            for(let i=0; i<elemsLen; i++){
+                let textArr = elems[i].textContent.split("\n");
+
+                let startTime = textArr[1].trim().split("～")[0];
+                if(startTime == parentContentTime){
+                    textDataArr.splice(textDataArr.length-4,4);
+                }
+                parentContentTime = startTime;
+
+                textDataArr.push(
+                    textArr[1].trim()
+                    ,","
+                    ,textArr[2].trim()
+                    ,"\n"
+                );
+            }
+
+            textDataArr.forEach(function(text){
+                textData += text;
+            });
+
+            let bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+            let blob = new Blob([ bom, textData], { "type" : "text/csv" });
+            if (window.navigator.msSaveBlob) { //IEの場合の処理
+                window.navigator.msSaveBlob(blob, "kikakuList.csv");
+            } else {
+                this.href = URL.createObjectURL(blob);
+            }
+        }
+        ,null
+    );
 }
 
 function changeTimeType(){

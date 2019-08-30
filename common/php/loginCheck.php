@@ -34,6 +34,7 @@ if(!empty($_POST["argArr"])){
     // パスワードを検証する
     if ($hash === $pass) {
         $_SESSION['twitterId'] = $twitterId;
+        $_SESSION['jnnrCd'] = $result[0]["JNNR_CD"];
         $_SESSION['admin'] = $result[0]["ATHRTY_CD"];
 
         // 正常終了
